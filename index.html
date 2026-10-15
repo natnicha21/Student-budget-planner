@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Budget Planner</title>
+    <!-- ใช้ฟอนต์ Prompt จาก Google Fonts เพื่อความสวยงาม -->
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: 'Prompt', sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            background-color: #f4f7f6;
+            color: #333;
+            padding: 20px;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: #fff;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-size: 24px;
+        }
+        .summary-card {
+            display: flex;
+            justify-content: space-between;
+            background: #2ecc71;
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 25px;
+        }
+        .summary-item {
+            text-align: center;
+            flex: 1;
+        }
+        .summary-item h3 {
+            font-size: 14px;
+            font-weight: 300;
+            margin-bottom: 5px;
+        }
+        .summary-item p {
+            font-size: 20px;
+            font-weight: 600;
+        }
+        form {
+            display: grid;
+            gap: 15px;
+            margin-bottom: 25px;
+            background: #fafafa;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #eee;
+        }
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+        label {
+            font-size: 14px;
+            margin-bottom: 5px;
+            color: #555;
+        }
+        input, select {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 6px;
+            font-size: 16px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: background 0.2s;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+        .transaction-list {
+            list-style: none;
+        }
+        .transaction-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px;
+            border-bottom: 1px solid #eee;
+        }
+        .transaction-item.income {
+            border-left: 5px solid #2ecc71;
+        }
+        .transaction-item.expense {
+            border-left: 5px solid #e74c3c;
+        }
+        .transaction-info p {
+            font-size: 14px;
+            color: #777;
+        }
+        .delete-btn {
+            background: none;
+            border: none;
+            color: #e74c3c;
+            cursor: pointer;
+            font-size: 14px;
+            padding: 5px;
+        }
+        .delete-btn:hover {
+            color: #c0392b;
+        }
+        .empty-text {
+            text-align: center;
+            color: #999;
+            padding: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Student Budget Planner</h1>
+
+        <!-- ส่วนแสดงสรุปยอดเงิน -->
+        <div class="summary-card" id="summaryCard">
+            <div class="summary-item">
+                <h3>ยอดเงินคงเหลือ</h3>
+                <p id="balance">0.00 ฿</p>
+            </div>
+            <div class="summary-item" style="border-left: 1px solid rgba(255,255,255,0.3);">
+                <h3>รายรับรวม</h3>
+                <p id="totalIncome">0.00 ฿</p>
+            </div>
+            <div class="summary-item" style="border-left: 1px solid rgba(255,255,255,0.3);">
+                <h3>รายจ่ายรวม</h3>
+                <p id="totalExpense">0.00 ฿</p>
+            </div>
+        </div>
+
+        <!-- ฟอร์มกรอกรายการ -->
+        <form id="budgetForm">
+            <div class="form-group">
+                <label for="type">ประเภทรายการ</label>
+                <select id="type" required>
+                    <option value="income">รายรับ</option>
+                    <option value="expense">รายจ่าย</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="description">ชื่อรายการ (เช่น ค่าข้าว, ได้ค่า 용돈)</label>
+                <input type="text" id="description" placeholder="ระบุรายการ..." required>
+            </div>
+            <div class="form-group">
+                <label for="amount">จำนวนเงิน (บาท)</label>
+                <input type="number" id="amount" step="0.01" placeholder="0.00" required>
+            </div>
+            <button type="submit">บันทึกรายการ</button>
+        </form>
+
+        <!-- รายการประวัติย้อนหลัง -->
+        <h3 style="margin-bottom: 10px; font-size: 16px; color: #444;">ประวัติรายรับ - รายจ่าย</h3>
+        <ul class="transaction-list" id="transactionList">
+            <!-- รายการจะถูกเพิ่มตรงนี้อัตโนมัติด้วย JavaScript -->
+        </ul>
+    </div>
+
+    <script>
+        const form = document.getElementById('budgetForm');
+        const typeInput = document.getElementById('type');
+        const descInput = document.getElementById('description');
+        const amountInput = document.getElementById('amount');
+        const transactionList = document.getElementById('transactionList');
+        
+        const balanceEl = document.getElementById('balance');
+        const totalIncomeEl = document.getElementById('totalIncome');
+        const totalExpenseEl = document.getElementById('totalExpense');
+
+        // โหลดข้อมูลเดิมจาก LocalStorage (ถ้ามี)
+        let transactions = JSON.parse(localStorage.getItem('transactions')) || [];
+
+        // ฟังก์ชันคำนวณและแสดงผล
+        function updateUI() {
+            transactionList.innerHTML = '';
+            let totalIncome = 0;
+            let totalExpense = 0;
+
+            if (transactions.length === 0) {
+                transactionList.innerHTML = '<p class="empty-text">ยังไม่มีรายการบันทึก</p>';
+            }
+
+            transactions.forEach((item, index) => {
+                const li = document.createElement('li');
+                li.classList.add('transaction-item', item.type);
+                
+                const amountFormatted = Number(item.amount).toLocaleString('th-TH', { minimumFractionDigits: 2 });
+                const sign = item.type === 'income' ? '+' : '-';
+
+                li.innerHTML = `
+                    <div>
+                        <strong>${item.description}</strong>
+                        <p>${sign}${amountFormatted} ฿</p>
+                    </div>
+                    <button class="delete-btn" onclick="deleteTransaction(${index})">ลบ</button>
+                `;
+                transactionList.appendChild(li);
+
+                if (item.type === 'income') {
+                    totalIncome += Number(item.amount);
+                } else {
+                    totalExpense += Number(item.amount);
+                }
+            });
+
+            const balance = totalIncome - totalExpense;
+
+            balanceEl.textContent = balance.toLocaleString('th-TH', { minimumFractionDigits: 2 }) + ' ฿';
+            totalIncomeEl.textContent = totalIncome.toLocaleString('th-TH', { minimumFractionDigits: 2 }) + ' ฿';
+            totalExpenseEl.textContent = totalExpense.toLocaleString('th-TH', { minimumFractionDigits: 2 }) + ' ฿';
+
+            // บันทึกลง LocalStorage
+            localStorage.setItem('transactions', JSON.stringify(transactions));
+        }
+
+        // ฟังก์ชันเพิ่มข้อมูล
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const newTransaction = {
+                type: typeInput.value,
+                description: descInput.value,
+                amount: parseFloat(amountInput.value)
+            };
+
+            transactions.push(newTransaction);
+            updateUI();
+
+            // รีเซ็ตฟอร์ม
+            descInput.value = '';
+            amountInput.value = '';
+        });
+
+        // ฟังก์ชันลบข้อมูล
+        function deleteTransaction(index) {
+            transactions.splice(index, 1);
+            updateUI();
+        }
+
+        // รันครั้งแรกเพื่อแสดงผล
+        updateUI();
+    </script>
+</body>
+</html>
