@@ -2,7 +2,7 @@
 <html lang="th">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Student Budget Planner</title>
     <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -14,155 +14,149 @@
             padding: 0;
             -webkit-tap-highlight-color: transparent;
         }
-        body {
+        html, body {
+            width: 100%;
+            height: 100%;
             background-color: #f8fafc;
             color: #1e293b;
             display: flex;
             justify-content: center;
-            min-height: 100vh;
+            overflow: hidden;
         }
         .app-container {
             width: 100%;
-            max-width: 430px; /* ขนาดหน้าจอมือถือ */
+            max-width: 430px;
             background: #f8fafc;
-            min-height: 100vh;
+            height: 100%;
             display: flex;
             flex-direction: column;
             position: relative;
-            padding-bottom: 80px;
             box-shadow: 0 0 20px rgba(0,0,0,0.05);
         }
-        /* Header */
         .header {
-            padding: 20px 20px 10px 20px;
+            padding: 16px 20px 8px 20px;
+            flex-shrink: 0;
         }
         .header h2 {
-            font-size: 14px;
+            font-size: 13px;
             color: #64748b;
             font-weight: 400;
         }
         .header h1 {
-            font-size: 22px;
+            font-size: 20px;
             color: #0f172a;
             font-weight: 600;
         }
         
-        /* Views / Pages */
+        /* Scrollable Content Area */
+        .content-scroll {
+            flex: 1;
+            overflow-y: auto;
+            padding: 0 20px 90px 20px;
+        }
+
         .tab-content {
             display: none;
-            padding: 0 20px;
             animation: fadeIn 0.2s ease-in-out;
         }
         .tab-content.active {
             display: block;
         }
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(5px); }
+            from { opacity: 0; transform: translateY(3px); }
             to { opacity: 1; transform: translateY(0); }
         }
-
-        /* Balance Main Card */
         .main-card {
             background: #2563eb;
             color: white;
-            padding: 24px;
+            padding: 20px;
             border-radius: 20px;
             box-shadow: 0 10px 25px -5px rgba(37, 99, 235, 0.3);
-            margin-bottom: 16px;
+            margin-bottom: 14px;
         }
         .main-card p {
-            font-size: 14px;
+            font-size: 13px;
             opacity: 0.9;
         }
         .main-card h2 {
-            font-size: 32px;
+            font-size: 28px;
             font-weight: 700;
-            margin-top: 4px;
+            margin-top: 2px;
         }
-
-        /* Stat Grid */
         .stat-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 12px;
-            margin-bottom: 20px;
+            margin-bottom: 16px;
         }
         .stat-card {
             background: white;
-            padding: 16px;
+            padding: 14px;
             border-radius: 16px;
             border: 1px solid #f1f5f9;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.02);
         }
         .stat-card span {
-            font-size: 13px;
+            font-size: 12px;
             color: #64748b;
         }
         .stat-card p {
-            font-size: 18px;
+            font-size: 16px;
             font-weight: 600;
             margin-top: 2px;
         }
         .stat-card.income p { color: #16a34a; }
         .stat-card.expense p { color: #dc2626; }
-
-        /* Action Button */
         .btn-primary {
             width: 100%;
             background: #2563eb;
             color: white;
             border: none;
-            padding: 14px;
+            padding: 12px;
             border-radius: 14px;
-            font-size: 16px;
+            font-size: 15px;
             font-weight: 600;
             cursor: pointer;
             box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
-            transition: transform 0.1s;
         }
-        .btn-primary:active {
-            transform: scale(0.98);
-        }
-
-        /* List Items */
         .section-title {
-            font-size: 16px;
+            font-size: 15px;
             font-weight: 600;
-            margin: 20px 0 12px 0;
+            margin: 16px 0 10px 0;
             color: #1e293b;
         }
         .card-list {
             background: white;
             border-radius: 16px;
-            padding: 8px 16px;
+            padding: 6px 16px;
             border: 1px solid #f1f5f9;
         }
         .list-item {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 12px 0;
+            padding: 10px 0;
             border-bottom: 1px solid #f1f5f9;
         }
         .list-item:last-child { border-bottom: none; }
-        .list-info h4 { font-size: 15px; font-weight: 500; }
-        .list-info p { font-size: 12px; color: #94a3b8; }
-        .amount { font-weight: 600; font-size: 15px; }
+        .list-info h4 { font-size: 14px; font-weight: 500; }
+        .list-info p { font-size: 11px; color: #94a3b8; }
+        .amount { font-weight: 600; font-size: 14px; }
         .amount.plus { color: #16a34a; }
         .amount.minus { color: #dc2626; }
 
-        /* Bottom Nav Bar */
+        /* Bottom Nav Bar - Fixed at bottom */
         .bottom-nav {
-            position: fixed;
+            position: absolute;
             bottom: 0;
+            left: 0;
             width: 100%;
-            max-width: 430px;
             background: white;
             display: flex;
             justify-content: space-around;
             padding: 10px 0 16px 0;
             border-top: 1px solid #f1f5f9;
             box-shadow: 0 -4px 15px rgba(0,0,0,0.03);
+            z-index: 100;
         }
         .nav-item {
             display: flex;
@@ -176,20 +170,20 @@
         }
         .nav-item i {
             font-size: 18px;
-            margin-bottom: 4px;
+            margin-bottom: 3px;
         }
         .nav-item.active {
             color: #2563eb;
             font-weight: 600;
         }
 
-        /* AI Chat Box Section */
+        /* AI Chat Box */
         .ai-chat-box {
             background: white;
             border-radius: 16px;
-            padding: 16px;
+            padding: 14px;
             border: 1px solid #e2e8f0;
-            height: 380px;
+            height: calc(100vh - 160px);
             display: flex;
             flex-direction: column;
         }
@@ -199,10 +193,10 @@
             display: flex;
             flex-direction: column;
             gap: 10px;
-            padding-right: 5px;
+            padding-right: 4px;
         }
         .msg {
-            max-width: 80%;
+            max-width: 85%;
             padding: 10px 14px;
             border-radius: 14px;
             font-size: 13px;
@@ -223,7 +217,7 @@
         .chat-input-area {
             display: flex;
             gap: 8px;
-            margin-top: 12px;
+            margin-top: 10px;
         }
         .chat-input-area input {
             flex: 1;
@@ -247,72 +241,66 @@
 
     <div class="app-container">
         
-        <!-- Header -->
         <div class="header">
             <h2 id="currentDate">ตุลาคม 2569</h2>
             <h1 id="pageTitle">หน้าหลัก</h1>
         </div>
 
-        <!-- TAB 1: หน้าหลัก -->
-        <div id="tab-home" class="tab-content active">
-            <div class="main-card">
-                <p>ยอดเงินคงเหลือ</p>
-                <h2>฿4,200.00</h2>
-            </div>
-
-            <div class="stat-grid">
-                <div class="stat-card income">
-                    <span>รายรับ</span>
-                    <p>฿6,000</p>
+        <div class="content-scroll">
+            <!-- TAB 1: หน้าหลัก -->
+            <div id="tab-home" class="tab-content active">
+                <div class="main-card">
+                    <p>ยอดเงินคงเหลือ</p>
+                    <h2>฿4,200.00</h2>
                 </div>
-                <div class="stat-card expense">
-                    <span>รายจ่าย</span>
-                    <p>฿1,800</p>
-                </div>
-            </div>
 
-            <button class="btn-primary" onclick="switchTab('tab-add')">+ เพิ่มรายการ</button>
-
-            <h3 class="section-title">รายการล่าสุด</h3>
-            <div class="card-list">
-                <div class="list-item">
-                    <div class="list-info">
-                        <h4>ข้าวกลางวัน</h4>
-                        <p>อาหาร • วันนี้</p>
+                <div class="stat-grid">
+                    <div class="stat-card income">
+                        <span>รายรับ</span>
+                        <p>฿6,000</p>
                     </div>
-                    <div class="amount minus">-฿60</div>
-                </div>
-                <div class="list-item">
-                    <div class="list-info">
-                        <h4>ค่ารถ</h4>
-                        <p>เดินทาง • เมื่อวาน</p>
+                    <div class="stat-card expense">
+                        <span>รายจ่าย</span>
+                        <p>฿1,800</p>
                     </div>
-                    <div class="amount minus">-฿40</div>
                 </div>
-                <div class="list-item">
-                    <div class="list-info">
-                        <h4>เงินจากผู้ปกครอง</h4>
-                        <p>รายรับ • 1 ต.ค.</p>
+
+                <button class="btn-primary" onclick="switchTab('tab-add', 'เพิ่มรายการ')">+ เพิ่มรายการ</button>
+
+                <h3 class="section-title">รายการล่าสุด</h3>
+                <div class="card-list">
+                    <div class="list-item">
+                        <div class="list-info">
+                            <h4>ข้าวกลางวัน</h4>
+                            <p>อาหาร • วันนี้</p>
+                        </div>
+                        <div class="amount minus">-฿60</div>
                     </div>
-                    <div class="amount plus">+฿6,000</div>
+                    <div class="list-item">
+                        <div class="list-info">
+                            <h4>ค่ารถ</h4>
+                            <p>เดินทาง • เมื่อวาน</p>
+                        </div>
+                        <div class="amount minus">-฿40</div>
+                    </div>
+                    <div class="list-item">
+                        <div class="list-info">
+                            <h4>เงินจากผู้ปกครอง</h4>
+                            <p>รายรับ • 1 ต.ค.</p>
+                        </div>
+                        <div class="amount plus">+฿6,000</div>
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <!-- TAB 2: รายการ / เพิ่มข้อมูล -->
-        <div id="tab-add" class="tab-content">
-            <div class="card-list" style="padding: 20px;">
-                <h3 style="margin-bottom: 15px;">บันทึกรายการใหม่</h3>
-                <div style="display: flex; gap: 10px; margin-bottom: 15px;">
-                    <button style="flex:1; padding:10px; border-radius:10px; border:1px solid #2563eb; background:#eff6ff; color:#2563eb; font-weight:600;">รายจ่าย</button>
-                    <button style="flex:1; padding:10px; border-radius:10px; border:1px solid #cbd5e1; background:white; color:#64748b;">รายรับ</button>
-                </div>
-                <input type="number" placeholder="จำนวนเงิน (บาท)" style="width:100%; padding:12px; border:1px solid #cbd5e1; border-radius:10px; margin-bottom:12px; font-size:16px;">
-                <input type="text" placeholder="รายละเอียด (เช่น ค่าข้าว)" style="width:100%; padding:12px; border:1px solid #cbd5e1; border-radius:10px; margin-bottom:15px; font-size:14px;">
-                <button class="btn-primary">บันทึกรายการ</button>
-            </div>
-        </div>
-
-        <!-- TAB 3: งบประมาณ -->
-        <div id="tab-budget" class="tab-content">
-            <div class="main-
+            <!-- TAB 2: รายการ -->
+            <div id="tab-add" class="tab-content">
+                <div class="card-list" style="padding: 20px;">
+                    <h3 style="margin-bottom: 14px;">บันทึกรายการใหม่</h3>
+                    <div style="display: flex; gap: 10px; margin-bottom: 14px;">
+                        <button style="flex:1; padding:10px; border-radius:10px; border:1px solid #2563eb; background:#eff6ff; color:#2563eb; font-weight:600;">รายจ่าย</button>
+                        <button style="flex:1; padding:10px; border-radius:10px; border:1px solid #cbd5e1; background:white; color:#64748b;">รายรับ</button>
+                    </div>
+                    <input type="number" placeholder="จำนวนเงิน (บาท)" style="width:100%; padding:12px; border:1px solid #cbd5e1; border-radius:10px; margin-bottom:12px; font-size:15px;">
+                    <input type="text" placeholder="รายละเอียด (เช่น ค่าข้าว)" style="width:100%; padding:12px; border:1px solid #cbd5e1; border-radius:10px; margin-bottom:14px; font-size:14px;">
+                    <button class="btn-primary" onclick="alert('บันทึกเรียบร้อย!')"
